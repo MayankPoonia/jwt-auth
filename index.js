@@ -4,8 +4,8 @@ const jwt = require("jsonwebtoken");
 
 require("dotenv").config();
 
-const authenticateAdmin = require("../middlewares/authenticateAdmin");
-const authenticateToken = require("../middlewares/authenticateToken");
+const authenticateAdmin = require("./middlewares/authenticateAdmin");
+const authenticateToken = require("./middlewares/authenticateToken");
 
 const connectToDB = require("./db");
 connectToDB();
