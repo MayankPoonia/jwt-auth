@@ -8,7 +8,7 @@ require("dotenv").config();
 const connectToDB = require("./db");
 connectToDB();
 
-const app = express();
+const app = express.Router();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -23,11 +23,11 @@ function generateRefreshToken(payload) {
   return jwt.sign(payload, process.env.REFRESH_TOKEN_SECRET);
 }
 
-app.get("/api/auth/authServer", (req, res) => {
+app.get("/", (req, res) => {
   res.status(200).json({ message: "Helllo baby , I am Auth Server...." });
 });
 
-app.post("/api/auth/v1/register", async (req, res) => {
+app.post("/v1/register", async (req, res) => {
   const { username, email, password, role } = req.body;
   const userExist = await User.findOne({ email });
   if (userExist) {
@@ -64,7 +64,7 @@ app.post("/api/auth/v1/register", async (req, res) => {
   });
 });
 
-app.post("/api/auth/v1/login", async (req, res) => {
+app.post("/v1/login", async (req, res) => {
   const { email, password } = req.body;
   const foundUser = await User.findOne({ email });
   if (foundUser) {
@@ -90,7 +90,7 @@ app.post("/api/auth/v1/login", async (req, res) => {
   }
 });
 
-app.post("/api/auth/v1/token/refresh", async (req, res) => {
+app.post("/v1/token/refresh", async (req, res) => {
   const refreshToken = req.body.refreshToken;
   if (!refreshToken) {
     return res.status(401).json({ message: "No token found" });
@@ -116,7 +116,7 @@ app.post("/api/auth/v1/token/refresh", async (req, res) => {
   });
 });
 
-app.delete("/api/auth/v1/logout", async (req, res) => {
+app.delete("/v1/logout", async (req, res) => {
   const { refreshToken } = req.body;
   const userFound = await User.findOne({ refreshToken });
   if (!userFound) {
