@@ -8,10 +8,10 @@ require("dotenv").config();
 const connectToDB = require("./db");
 connectToDB();
 
-const app = express();
+const router = express.Router();
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+router.use(express.json());
+router.use(express.urlencoded({ extended: true }));
 
 function generateAccessToken(payload) {
   return jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET, {
@@ -23,11 +23,11 @@ function generateRefreshToken(payload) {
   return jwt.sign(payload, process.env.REFRESH_TOKEN_SECRET);
 }
 
-app.get("/", (req, res) => {
+router.get("/", (req, res) => {
   res.status(200).json({ message: "Helllo baby , I am Auth Server...." });
 });
 
-app.post("/api/auth/v1/register", async (req, res) => {
+router.post("/api/auth/v1/register", async (req, res) => {
   const { username, email, password, role } = req.body;
   const userExist = await User.findOne({ email });
   if (userExist) {
@@ -64,7 +64,7 @@ app.post("/api/auth/v1/register", async (req, res) => {
   });
 });
 
-app.post("/api/auth/v1/login", async (req, res) => {
+router.post("/api/auth/v1/login", async (req, res) => {
   const { email, password } = req.body;
   const foundUser = await User.findOne({ email });
   if (foundUser) {
@@ -90,7 +90,7 @@ app.post("/api/auth/v1/login", async (req, res) => {
   }
 });
 
-app.post("/api/auth/v1/token/refresh", async (req, res) => {
+router.post("/api/auth/v1/token/refresh", async (req, res) => {
   const refreshToken = req.body.refreshToken;
   if (!refreshToken) {
     return res.status(401).json({ message: "No token found" });
@@ -116,7 +116,7 @@ app.post("/api/auth/v1/token/refresh", async (req, res) => {
   });
 });
 
-app.delete("/api/auth/v1/logout", async (req, res) => {
+router.delete("/api/auth/v1/logout", async (req, res) => {
   const { refreshToken } = req.body;
   const userFound = await User.findOne({ refreshToken });
   if (!userFound) {
@@ -128,8 +128,8 @@ app.delete("/api/auth/v1/logout", async (req, res) => {
   return res.status(200).json({ message: "Logout succesfull" });
 });
 
-// app.listen(8090, () => {
+// router.listen(8090, () => {
 //   console.log(`⚙️ Auth Server running on port 8090....`);
 // });
 
-module.exports = app;
+module.exports = router;
