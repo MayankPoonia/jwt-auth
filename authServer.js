@@ -128,6 +128,8 @@ app.delete("/api/auth/v1/logout", async (req, res) => {
   return res.status(200).json({ message: "Logout succesfull" });
 });
 
-app.listen(8090, () => {
-  console.log(`⚙️ Auth Server running on port 8090....`);
-});
+// app.listen(8090, () => {
+//   console.log(`⚙️ Auth Server running on port 8090....`);
+// });
+
+module.exports = app;
