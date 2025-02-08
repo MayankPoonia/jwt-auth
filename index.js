@@ -28,6 +28,8 @@ app.get("/dashboard", authenticateAdmin, (req, res) => {
     .json({ message: `Hello admin : ${req.user.username}` });
 });
 
-app.listen(8080, () => {
-  console.log(`⚙️ Main Server running on port 8080....`);
-});
+// app.listen(8080, () => {
+//   console.log(`⚙️ Main Server running on port 8080....`);
+// });
+
+module.exports = app;
