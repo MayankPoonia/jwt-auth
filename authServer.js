@@ -23,7 +23,7 @@ function generateRefreshToken(payload) {
   return jwt.sign(payload, process.env.REFRESH_TOKEN_SECRET);
 }
 
-app.get("/api/auth", (req, res) => {
+app.get("/api/auth/authServer", (req, res) => {
   res.status(200).json({ message: "Helllo baby , I am Auth Server...." });
 });
 
