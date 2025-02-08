@@ -8,10 +8,10 @@ require("dotenv").config();
 const connectToDB = require("./db");
 connectToDB();
 
-const router = express.Router();
+const app = express();
 
-router.use(express.json());
-router.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 function generateAccessToken(payload) {
   return jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET, {
@@ -23,11 +23,11 @@ function generateRefreshToken(payload) {
   return jwt.sign(payload, process.env.REFRESH_TOKEN_SECRET);
 }
 
-router.get("/", (req, res) => {
+app.get("/api/auth", (req, res) => {
   res.status(200).json({ message: "Helllo baby , I am Auth Server...." });
 });
 
-router.post("/api/auth/v1/register", async (req, res) => {
+app.post("/api/auth/v1/register", async (req, res) => {
   const { username, email, password, role } = req.body;
   const userExist = await User.findOne({ email });
   if (userExist) {
@@ -64,7 +64,7 @@ router.post("/api/auth/v1/register", async (req, res) => {
   });
 });
 
-router.post("/api/auth/v1/login", async (req, res) => {
+app.post("/api/auth/v1/login", async (req, res) => {
   const { email, password } = req.body;
   const foundUser = await User.findOne({ email });
   if (foundUser) {
@@ -90,7 +90,7 @@ router.post("/api/auth/v1/login", async (req, res) => {
   }
 });
 
-router.post("/api/auth/v1/token/refresh", async (req, res) => {
+app.post("/api/auth/v1/token/refresh", async (req, res) => {
   const refreshToken = req.body.refreshToken;
   if (!refreshToken) {
     return res.status(401).json({ message: "No token found" });
@@ -116,7 +116,7 @@ router.post("/api/auth/v1/token/refresh", async (req, res) => {
   });
 });
 
-router.delete("/api/auth/v1/logout", async (req, res) => {
+app.delete("/api/auth/v1/logout", async (req, res) => {
   const { refreshToken } = req.body;
   const userFound = await User.findOne({ refreshToken });
   if (!userFound) {
@@ -128,8 +128,8 @@ router.delete("/api/auth/v1/logout", async (req, res) => {
   return res.status(200).json({ message: "Logout succesfull" });
 });
 
-// router.listen(8090, () => {
+// app.listen(8090, () => {
 //   console.log(`⚙️ Auth Server running on port 8090....`);
 // });
 
-module.exports = router;
+module.exports = app;

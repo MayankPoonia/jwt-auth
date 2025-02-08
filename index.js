@@ -7,7 +7,7 @@ require("dotenv").config();
 const authenticateAdmin = require("./middlewares/authenticateAdmin");
 const authenticateToken = require("./middlewares/authenticateToken");
 
-const authRouter = require("./authServer");
+// const authRouter = require("./authServer");
 
 const connectToDB = require("./db");
 connectToDB();
@@ -19,7 +19,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(authenticateToken);
 
-app.use("/api/auth", authRouter);
+// app.use("/api/auth", authRouter);
 
 app.get("/posts", (req, res) => {
   const user = req.user.email;
